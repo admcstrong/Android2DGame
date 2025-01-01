@@ -5,6 +5,7 @@ import static androidx.core.content.ContextCompat.*;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,11 +15,13 @@ import androidx.core.content.ContextCompat;
 
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
+    private final Player player;
     private Gameloop gameLoop;
     private Context context;
 
     public Game(Context context) {
         super(context);
+        //getContext();
 
         // Get surface holder and add callback
         SurfaceHolder surfaceHolder = getHolder();
@@ -27,7 +30,25 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         this.context = context;
         gameLoop = new Gameloop(this, surfaceHolder);
 
+        // Initialize player
+        player = new Player(getContext(), 500, 500, 30);
+
         setFocusable(true);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // Handle touch event actions
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                player.setPosition((double) event.getX(), (double) event.getY());
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                player.setPosition((double) event.getX(), (double) event.getY());
+                return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -50,6 +71,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         drawUPS(canvas);
         drawFPS(canvas);
+
+        player.draw(canvas);
     }
 
     public void drawUPS(Canvas canvas) {
@@ -72,6 +95,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         // update game state
+        player.update();
     }
 }
 
