@@ -9,7 +9,7 @@ import java.util.zip.Adler32;
 public class Gameloop extends Thread{
     private boolean isRunning = false;
     private SurfaceHolder surfaceHolder;
-    private static final double MAX_UPS = 30.0;
+    public static final double MAX_UPS = 30.0;
     private static final double UPS_PERIOD = 1E+3/MAX_UPS;
     private Game game;
     private double averageUPS;
