@@ -2,7 +2,8 @@ package com.example.android2dgamedevelopment_;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.WindowManager;
+
+import com.example.android2dgamedevelopment_.object.Game;
 
 /*
 Main activity is the entry point to our application
