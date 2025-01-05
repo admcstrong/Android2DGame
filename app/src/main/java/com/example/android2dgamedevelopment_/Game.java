@@ -1,4 +1,4 @@
-package com.example.android2dgamedevelopment_.object;
+package com.example.android2dgamedevelopment_;
 
 import static androidx.core.content.ContextCompat.*;
 
@@ -11,9 +11,8 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import com.example.android2dgamedevelopment_.Gameloop;
-import com.example.android2dgamedevelopment_.Joystick;
-import com.example.android2dgamedevelopment_.R;
+import com.example.android2dgamedevelopment_.object.Enemy;
+import com.example.android2dgamedevelopment_.object.Player;
 
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {

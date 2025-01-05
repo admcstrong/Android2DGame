@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.android2dgamedevelopment_.Circle;
 import com.example.android2dgamedevelopment_.Gameloop;
 import com.example.android2dgamedevelopment_.R;
 
@@ -12,7 +11,7 @@ import com.example.android2dgamedevelopment_.R;
  * Enemy is a character which always moves in the direction of the player
  * The enemy class is an extension of a Circle, which is an extension of a GameObject
  */
-class Enemy extends Circle {
+public class Enemy extends Circle {
 
     private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND*0.6;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / Gameloop.MAX_UPS;

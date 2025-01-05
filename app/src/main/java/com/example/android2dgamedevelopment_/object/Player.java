@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.android2dgamedevelopment_.Circle;
 import com.example.android2dgamedevelopment_.Gameloop;
 import com.example.android2dgamedevelopment_.Joystick;
 import com.example.android2dgamedevelopment_.R;

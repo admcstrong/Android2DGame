@@ -3,8 +3,6 @@ package com.example.android2dgamedevelopment_;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-import com.example.android2dgamedevelopment_.object.Game;
-
 public class Gameloop extends Thread{
     private boolean isRunning = false;
     private SurfaceHolder surfaceHolder;
