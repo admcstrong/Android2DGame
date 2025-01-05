@@ -13,13 +13,19 @@ import androidx.annotation.NonNull;
 
 import com.example.android2dgamedevelopment_.object.Enemy;
 import com.example.android2dgamedevelopment_.object.Player;
+import com.example.android2dgamedevelopment_.object.Circle;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final Joystick joystick;
-    private final Enemy enemy;
+    //private final Enemy enemy;
     private Gameloop gameLoop;
+    private List<Enemy> enemyList = new ArrayList<Enemy>();
     private Context context;
 
     public Game(Context context) {
@@ -36,7 +42,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Initialize game objects
         joystick = new Joystick(275, 700, 70, 40);
         player = new Player(getContext(), joystick, 500, 500, 30);
-        enemy = new Enemy(getContext(), player, 100, 100, 30);
+        //enemy = new Enemy(getContext(), player, 100, 100, 30);
 
         setFocusable(true);
     }
@@ -88,7 +94,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
         joystick.draw(canvas);
         player.draw(canvas);
-        enemy.draw(canvas);
+        //enemy.draw(canvas)
+        for (Enemy enemy : enemyList) {
+            enemy.draw(canvas);
+        }
     }
 
     public void drawUPS(Canvas canvas) {
@@ -113,7 +122,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // update game state
         joystick.update();
         player.update();
-        enemy.update();
+        //enemy.update();
+
+        // Spawn enemy if it is time to spawn new enemies
+        if (Enemy.readyToSpawn()) {
+            enemyList.add(new Enemy(getContext(), player));
+        }
+
+        // Update state of each enemy
+        for (Enemy enemy : enemyList) {
+            enemy.update();
+        }
+
+        // Iterate through enemyList and check for collision between each enemy and the player
+        Iterator<Enemy> iteratorEnemy = enemyList.iterator();
+        while (iteratorEnemy.hasNext()) {
+            if (Circle.isColliding(iteratorEnemy.next(), player))
+            {
+                // Remove enemy if it collides with the player
+                iteratorEnemy.remove();
+            }
+        }
     }
 }
 
