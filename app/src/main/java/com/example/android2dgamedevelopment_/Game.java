@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.example.android2dgamedevelopment_.object.Enemy;
 import com.example.android2dgamedevelopment_.object.Player;
 import com.example.android2dgamedevelopment_.object.Circle;
+import com.example.android2dgamedevelopment_.object.Spell;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,14 +24,15 @@ import java.util.List;
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final Joystick joystick;
-    //private final Enemy enemy;
     private Gameloop gameLoop;
     private List<Enemy> enemyList = new ArrayList<Enemy>();
+    private List<Spell> spellList = new ArrayList<Spell>();
     private Context context;
+    private int joystickPointerId = 0;
+    private int numberOfSpellsToCast = 0;
 
     public Game(Context context) {
         super(context);
-        //getContext();
 
         // Get surface holder and add callback
         SurfaceHolder surfaceHolder = getHolder();
@@ -42,7 +44,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Initialize game objects
         joystick = new Joystick(275, 700, 70, 40);
         player = new Player(getContext(), joystick, 500, 500, 30);
-        //enemy = new Enemy(getContext(), player, 100, 100, 30);
 
         setFocusable(true);
     }
@@ -51,22 +52,37 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
 
         // Handle touch event actions
-        switch (event.getAction()) {
+        switch (event.getActionMasked()) { // (a) To reinstate bug change this back to getAction() and ...
             case MotionEvent.ACTION_DOWN:
-                if(joystick.isPressed((double) event.getX(), (double) event.getY())) {
+            case MotionEvent.ACTION_POINTER_DOWN:    // (b) ... remove this line as well. And ...
+                if (joystick.getIsPressed()) {
+                    // Joystick was pressed before this event --> cast spell
+                      ///spellList.add(new Spell(getContext(), player));
+                    numberOfSpellsToCast++;
+                } else if(joystick.isPressed((double) event.getX(), (double) event.getY())) {
+                    // Joystick is pressed in this event -> setIsPressed(true) and Store ID
+                    joystickPointerId = event.getPointerId(event.getActionIndex());
                     joystick.setIsPressed(true);
+                } else {
+                    // Joystick was not previously, and is not pressed in this event -> cast spell
+                    numberOfSpellsToCast++;
+                    ///spellList.add(new Spell(getContext(), player));
                 }
-                /*player.setPosition((double) event.getX(), (double) event.getY());*/
                 return true;
             case MotionEvent.ACTION_MOVE:
+                // Joystick was pressed previously and is now moved
                 if(joystick.getIsPressed()) {
                     joystick.setActuator((double) event.getX(), (double) event.getY());
                 }
-                /*player.setPosition((double) event.getX(), (double) event.getY());*/
                 return true;
             case MotionEvent.ACTION_UP:
-                joystick.setIsPressed(false);
-                joystick.resetActuator();
+            case MotionEvent.ACTION_POINTER_UP:  // (c) ... remove this line too ...
+                if(joystickPointerId == event.getPointerId(event.getActionIndex())) {
+                    // Joystick was let go of -> setIsPressed(false) and resetActuator
+                    joystick.setIsPressed(false);
+                    joystick.resetActuator();
+
+                }
                 return true;
         }
         return super.onTouchEvent(event);
@@ -94,9 +110,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
         joystick.draw(canvas);
         player.draw(canvas);
-        //enemy.draw(canvas)
+
+        // Update status of each enemy
         for (Enemy enemy : enemyList) {
             enemy.draw(canvas);
+        }
+        // Update state of each spell
+        for (Spell spell : spellList) {
+            spell.draw(canvas);
         }
     }
 
@@ -122,9 +143,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // update game state
         joystick.update();
         player.update();
-        //enemy.update();
 
         // Spawn enemy if it is time to spawn new enemies
+        while (numberOfSpellsToCast > 0 ) {
+            spellList.add(new Spell(getContext(), player));
+            numberOfSpellsToCast--;
+        }
         if (Enemy.readyToSpawn()) {
             enemyList.add(new Enemy(getContext(), player));
         }
@@ -134,14 +158,33 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.update();
         }
 
+        // Update state of each spell
+        for (Spell spell: spellList) {
+            spell.update();
+        }
+
         // Iterate through enemyList and check for collision between each enemy and the player
+        //.    and all spells
         Iterator<Enemy> iteratorEnemy = enemyList.iterator();
         while (iteratorEnemy.hasNext()) {
-            if (Circle.isColliding(iteratorEnemy.next(), player))
+            Circle enemy = iteratorEnemy.next();
+            if (Circle.isColliding(enemy, player))
             {
                 // Remove enemy if it collides with the player
                 iteratorEnemy.remove();
+                continue;
             }
+            Iterator<Spell> iteratorSpell = spellList.iterator();
+            while (iteratorSpell.hasNext()) {
+                Circle spell = iteratorSpell.next();
+                // remove spell if it collides with the enemy
+                if (Circle.isColliding(spell, enemy)) {
+                    iteratorSpell.remove();
+                    iteratorEnemy.remove();
+                    break;
+            }
+        }
+
         }
     }
 }
