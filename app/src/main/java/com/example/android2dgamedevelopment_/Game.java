@@ -172,6 +172,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             {
                 // Remove enemy if it collides with the player
                 iteratorEnemy.remove();
+                player.setHealthPoints(player.getHealthPoints() - 1);
                 continue;
             }
             Iterator<Spell> iteratorSpell = spellList.iterator();
