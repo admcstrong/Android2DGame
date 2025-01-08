@@ -30,6 +30,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
     private int joystickPointerId = 0;
     private int numberOfSpellsToCast = 0;
+    private GameOver gameOver;
 
     public Game(Context context) {
         super(context);
@@ -41,9 +42,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         this.context = context;
         gameLoop = new Gameloop(this, surfaceHolder);
 
-        // Initialize game objects
+        // Intialize game panels
+        gameOver = new GameOver(getContext());
         joystick = new Joystick(275, 700, 70, 40);
+
+        // Initialize game objects
         player = new Player(getContext(), joystick, 500, 500, 30);
+
 
         setFocusable(true);
     }
@@ -119,6 +124,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for (Spell spell : spellList) {
             spell.draw(canvas);
         }
+
+        // Draw game over if the player is dead
+        if (player.getHealthPoints() <= 0) {
+            gameOver.draw(canvas);
+        }
     }
 
     public void drawUPS(Canvas canvas) {
@@ -140,6 +150,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+
+        // Stop updating the game if the player is dead
+        if (player.getHealthPoints() <= 0) {
+            return;
+        }
+        
         // update game state
         joystick.update();
         player.update();
