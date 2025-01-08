@@ -1,10 +1,12 @@
-package com.example.android2dgamedevelopment_;
+package com.example.android2dgamedevelopment_.gamepanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.android2dgamedevelopment_.R;
 
 /**
  * Gameover is a panel which draws the game over screen

@@ -11,10 +11,13 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import com.example.android2dgamedevelopment_.object.Enemy;
-import com.example.android2dgamedevelopment_.object.Player;
-import com.example.android2dgamedevelopment_.object.Circle;
-import com.example.android2dgamedevelopment_.object.Spell;
+import com.example.android2dgamedevelopment_.gameobject.Enemy;
+import com.example.android2dgamedevelopment_.gameobject.Player;
+import com.example.android2dgamedevelopment_.gameobject.Circle;
+import com.example.android2dgamedevelopment_.gameobject.Spell;
+import com.example.android2dgamedevelopment_.gamepanel.GameOver;
+import com.example.android2dgamedevelopment_.gamepanel.Joystick;
+import com.example.android2dgamedevelopment_.gamepanel.Performance;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +34,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int joystickPointerId = 0;
     private int numberOfSpellsToCast = 0;
     private GameOver gameOver;
+    private Performance performance;
 
     public Game(Context context) {
         super(context);
@@ -45,6 +49,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Intialize game panels
         gameOver = new GameOver(getContext());
         joystick = new Joystick(275, 700, 70, 40);
+        performance = new Performance(context, gameLoop);
 
         // Initialize game objects
         player = new Player(getContext(), joystick, 500, 500, 30);
@@ -111,10 +116,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        drawUPS(canvas);
-        drawFPS(canvas);
-        joystick.draw(canvas);
+
+        // Draw game objects
         player.draw(canvas);
+        performance.draw(canvas);
+
+        // Draw game panels
+        joystick.draw(canvas);
+
+
 
         // Update status of each enemy
         for (Enemy enemy : enemyList) {
@@ -131,23 +141,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public void drawUPS(Canvas canvas) {
-        String averageUPS = Double.toString(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        int color = getColor(context, R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 100, paint);
-    }
 
-    public void drawFPS(Canvas canvas) {
-        String averageFPS = Double.toString(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        int color = getColor(context, R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 200, paint);
-    }
 
     public void update() {
 
@@ -155,7 +149,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (player.getHealthPoints() <= 0) {
             return;
         }
-        
+
         // update game state
         joystick.update();
         player.update();

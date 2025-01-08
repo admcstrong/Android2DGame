@@ -1,13 +1,13 @@
-package com.example.android2dgamedevelopment_.object;
+package com.example.android2dgamedevelopment_.gameobject;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.view.SurfaceView;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.android2dgamedevelopment_.Gameloop;
-import com.example.android2dgamedevelopment_.Joystick;
+import com.example.android2dgamedevelopment_.gamepanel.HealthBar;
+import com.example.android2dgamedevelopment_.gamepanel.Joystick;
 import com.example.android2dgamedevelopment_.R;
 import com.example.android2dgamedevelopment_.Utils;
 

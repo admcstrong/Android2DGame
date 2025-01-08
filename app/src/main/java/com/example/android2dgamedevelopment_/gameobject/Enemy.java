@@ -1,4 +1,4 @@
-package com.example.android2dgamedevelopment_.object;
+package com.example.android2dgamedevelopment_.gameobject;
 
 import android.content.Context;
 
