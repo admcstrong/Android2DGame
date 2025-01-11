@@ -2,6 +2,8 @@ package com.example.android2dgamedevelopment_.gameobject;
 
 import android.graphics.Canvas;
 
+import com.example.android2dgamedevelopment_.GameDisplay;
+
 public abstract class GameObject {
     public double positionX;
     public double positionY;
@@ -23,7 +25,7 @@ public abstract class GameObject {
         );
     }
 
-    public abstract void draw(Canvas canvas);
+    public abstract void draw(Canvas canvas, GameDisplay gameDisplay);
 
     public abstract void update();
 

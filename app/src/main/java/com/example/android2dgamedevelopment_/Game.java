@@ -2,9 +2,11 @@ package com.example.android2dgamedevelopment_;
 
 import static androidx.core.content.ContextCompat.*;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -36,6 +38,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int numberOfSpellsToCast = 0;
     private GameOver gameOver;
     private Performance performance;
+    private GameDisplay gameDisplay;
 
     public Game(Context context) {
         super(context);
@@ -54,6 +57,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Initialize game objects
         player = new Player(getContext(), joystick, 500, 500, 30);
+
+        // Initialize the game display and center around it
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        gameDisplay = new GameDisplay(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
 
 
         setFocusable(true);
@@ -126,25 +134,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
+
         // Draw game objects
-        player.draw(canvas);
-        performance.draw(canvas);
+        player.draw(canvas, gameDisplay);
+
+            // Update status of each enemy
+        for (Enemy enemy : enemyList) {
+            enemy.draw(canvas, gameDisplay);
+        }
+           // Update state of each spell
+        for (Spell spell : spellList) {
+            spell.draw(canvas, gameDisplay);
+        }
 
         // Draw game panels
         joystick.draw(canvas);
+        performance.draw(canvas);
 
-
-
-        // Update status of each enemy
-        for (Enemy enemy : enemyList) {
-            enemy.draw(canvas);
-        }
-        // Update state of each spell
-        for (Spell spell : spellList) {
-            spell.draw(canvas);
-        }
-
-        // Draw game over if the player is dead
+          // Draw game over if the player is dead
         if (player.getHealthPoints() <= 0) {
             gameOver.draw(canvas);
         }
@@ -206,6 +213,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         }
+        gameDisplay.update();
     }
 
     public void pause() {
