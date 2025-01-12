@@ -2,6 +2,7 @@ package com.example.android2dgamedevelopment_;
 
 import static androidx.core.content.ContextCompat.*;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,6 +22,7 @@ import com.example.android2dgamedevelopment_.gameobject.Spell;
 import com.example.android2dgamedevelopment_.gamepanel.GameOver;
 import com.example.android2dgamedevelopment_.gamepanel.Joystick;
 import com.example.android2dgamedevelopment_.gamepanel.Performance;
+import com.example.android2dgamedevelopment_.graphics.AnimatorRaw;
 import com.example.android2dgamedevelopment_.graphics.SpriteSheet;
 
 import java.util.ArrayList;
@@ -58,7 +60,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Initialize game objects
         SpriteSheet spriteSheet = new SpriteSheet(context);
-        player = new Player(getContext(), joystick, 500, 500, 30, spriteSheet.getPlayerSprite());
+        AnimatorRaw animatorRaw = new AnimatorRaw(spriteSheet.getPlayerSpriteArray());
+        player = new Player(getContext(), joystick, 500, 500, 30, animatorRaw);
 
         // Initialize the game display and center around it
         DisplayMetrics displayMetrics = new DisplayMetrics();
