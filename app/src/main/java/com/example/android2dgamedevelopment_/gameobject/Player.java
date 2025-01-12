@@ -11,6 +11,7 @@ import com.example.android2dgamedevelopment_.gamepanel.HealthBar;
 import com.example.android2dgamedevelopment_.gamepanel.Joystick;
 import com.example.android2dgamedevelopment_.R;
 import com.example.android2dgamedevelopment_.Utils;
+import com.example.android2dgamedevelopment_.graphics.Sprite;
 
 /**
  * Player is the main character of the game, which the user can control with a touch joystick
@@ -27,13 +28,15 @@ public class Player extends Circle {
     private final Joystick joystick;
     private HealthBar healthBar;
     private int healthPoints;
+    private Sprite sprite;
 
 
-    public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
+    public Player(Context context, Joystick joystick, double positionX, double positionY, double radius, Sprite sprite) {
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
         this.joystick = joystick;
         this.healthBar = new HealthBar(context,this);
         this.healthPoints = MAX_HEALTH_POINTS;
+        this.sprite = sprite;
     }
 
     public void update() {
@@ -60,7 +63,12 @@ public class Player extends Circle {
     }
 
     public void draw(Canvas canvas, GameDisplay gameDisplay) {
-        super.draw(canvas, gameDisplay);
+        sprite.draw(
+                canvas,
+                (int) gameDisplay.gameToDisplayCoordinatesX(getPositionX() - sprite.getWidth()/2),
+                (int) gameDisplay.gameToDisplayCoordinatesY(getPositionY() - sprite.getHeight()/2)
+        );
+        //super.draw(canvas, gameDisplay);
         healthBar.draw(canvas, gameDisplay);
 
     }
