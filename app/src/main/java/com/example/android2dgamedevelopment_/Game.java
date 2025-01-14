@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.android2dgamedevelopment_.Map.TileMap;
 import com.example.android2dgamedevelopment_.gameobject.Enemy;
 import com.example.android2dgamedevelopment_.gameobject.Player;
 import com.example.android2dgamedevelopment_.gameobject.Circle;
@@ -33,6 +34,7 @@ import java.util.List;
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final Joystick joystick;
+    private final TileMap tilemap;
     private Gameloop gameLoop;
     private List<Enemy> enemyList = new ArrayList<Enemy>();
     private List<Spell> spellList = new ArrayList<Spell>();
@@ -68,6 +70,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         gameDisplay = new GameDisplay(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
 
+        // Initialize the TileMap
+        tilemap = new TileMap(spriteSheet);
 
         setFocusable(true);
     }
@@ -139,6 +143,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
+        // Draw the background tile map
+        tilemap.draw(canvas, gameDisplay);
 
         // Draw game objects
         player.draw(canvas, gameDisplay);
